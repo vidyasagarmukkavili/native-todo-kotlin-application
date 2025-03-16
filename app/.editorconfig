@@ -1,0 +1,4 @@
+root = true
+
+[*]
+ktlint_standard = disabled # Disable all rules from the `standard` rule set provided by KtLint
