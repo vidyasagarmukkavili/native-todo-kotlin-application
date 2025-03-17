@@ -1,5 +1,6 @@
 package com.example.firstapplication.viewmodel
 
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.firstapplication.data.Todo
@@ -12,6 +13,14 @@ class TodoViewModel(private val todoDao: TodoDao) : ViewModel() {
 
     private val _todos = MutableStateFlow<List<Todo>>(emptyList())
     val todos: StateFlow<List<Todo>> = _todos
+
+    //    var showTodoDialogBox by mutableStateOf(false)
+    private val _showTodoDialogBox = mutableStateOf(false)
+    var showTodoDialogBox: Boolean
+        get() = _showTodoDialogBox.value
+        set(value) {
+            _showTodoDialogBox.value = value
+        }
 
     /*
     Runs during initialization of the ViewModel
@@ -45,4 +54,5 @@ class TodoViewModel(private val todoDao: TodoDao) : ViewModel() {
             todoDao.deleteTodoItem(todo)
         }
     }
+
 }
