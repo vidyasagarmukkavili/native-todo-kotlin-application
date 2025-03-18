@@ -3,7 +3,7 @@
 A simple Kotlin based Todo application to keep a track of all the day to day activities without a
 lot of clutter!
 
-![App Preview (Light Mode)](./app-preview-image-light.png)
+![App Preview (Light Mode)](./app-preview-image.png)
 
 ## Features
 
