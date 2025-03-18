@@ -32,6 +32,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
@@ -40,8 +41,10 @@ import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -50,6 +53,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
@@ -66,6 +71,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.example.firstapplication.data.AppDatabase
 import com.example.firstapplication.data.Todo
 import com.example.firstapplication.ui.theme.FirstApplicationTheme
@@ -78,6 +84,7 @@ import java.util.Locale
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen()
 
         // Get the database instance
         val db = AppDatabase.getDatabase(this)
@@ -89,55 +96,50 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
-//            var showTodoDialogBox by remember { mutableStateOf(false) }
+            Box(contentAlignment = Alignment.Center) {
+                FirstApplicationTheme {
+                    Scaffold(
+                        modifier = Modifier,
+                        topBar = {
+                            Row {
+                                Header(
+                                    heading = "To do List 📝"
+                                )
 
-//            var showTodoDialogBox = todoViewModel.showTodoDialogBox
-
-            val showTodoDialogBox = todoViewModel.showTodoDialogBox
-
-            FirstApplicationTheme {
-                Scaffold(
-                    modifier = Modifier,
-                    topBar = {
-                        Row {
-                            Header(
-                                heading = "To do List 📝"
-                            )
-
-                        }
-                    },
-                    floatingActionButton = {
-
-                        FloatingActionButton(
-                            onClick = {
-                                todoViewModel.showTodoDialogBox = true
                             }
+                        },
+                        floatingActionButton = {
 
-                        ) {
-                            Icon(Icons.Filled.Add, "Floating Action Button")
+                            FloatingActionButton(
+                                onClick = {
+                                    todoViewModel.showTodoDialogBox = true
+                                },
+                                containerColor = FloatingActionButtonDefaults.containerColor
+
+                            ) {
+                                Icon(Icons.Filled.Add, "Floating Action Button")
+                            }
                         }
-                    }
 
-                ) { contentPadding ->
-                    // Observe the ViewModel's state using collectAsState()
-                    val todoList = todoViewModel.todos.collectAsState().value
+                    ) { contentPadding ->
+                        // Observe the ViewModel's state using collectAsState()
+                        val todoList = todoViewModel.todos.collectAsState().value
 
-                    Box() {
-                        Column(
-                            verticalArrangement = Arrangement.Top,
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.padding(top = contentPadding.calculateTopPadding())
-                        ) {
-                            TodoList(
-                                todoList = todoList,
-                                todoViewModel
-                            )
+                        Box() {
+                            Column(
+                                verticalArrangement = Arrangement.Top,
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                modifier = Modifier.padding(top = contentPadding.calculateTopPadding())
+                            ) {
+                                TodoList(
+                                    todoList = todoList,
+                                    todoViewModel
+                                )
+                            }
+                            if (todoViewModel.showTodoDialogBox) {
+                                AddTodoItemDialogBox(todoViewModel)
+                            }
                         }
-                        if (todoViewModel.showTodoDialogBox) {
-                            AddTodoItemDialogBox(todoViewModel)
-                        }
-//                        AddTodoItemTextField(todoViewModel)
-
                     }
                 }
             }
@@ -177,6 +179,7 @@ class MainActivity : ComponentActivity() {
     fun AddTodoItemTextField(todoViewModel: TodoViewModel) {
         var todoText by remember { mutableStateOf("") }
         var todoDesc by remember { mutableStateOf("") }
+        val focusRequester = remember { FocusRequester() }
         val keyboardController = LocalSoftwareKeyboardController.current
         val focusManager = LocalFocusManager.current
 
@@ -188,8 +191,9 @@ class MainActivity : ComponentActivity() {
             OutlinedTextField(
                 value = todoText,
                 onValueChange = { todoText = it },
-                placeholder = { Text(text = "Todo Item Title") },
+                placeholder = { Text(text = "Example: Pick up groceries") },
                 maxLines = 1,
+                colors = TextFieldDefaults.colors(focusedIndicatorColor = MaterialTheme.colorScheme.secondary),
                 textStyle = TextStyle(
                     color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.Normal,
@@ -201,29 +205,22 @@ class MainActivity : ComponentActivity() {
                 keyboardActions = KeyboardActions(
                     onDone = {
                         if (todoText.isNotEmpty()) {
-//                            val newTodo = Todo(
-//                                id = 0,
-//                                status = false,
-//                                todoItem = todoText,
-//                                description = null
-//                            )
-//                            todoViewModel.addTodo(newTodo)
-//                            todoText = ""
-//                            keyboardController?.hide()
                             focusManager.moveFocus(FocusDirection.Down)
                         }
                     },
                 ),
-                label = { Text("Add Todo Item", color = MaterialTheme.colorScheme.onBackground) },
+                label = { Text("Task Name", color = MaterialTheme.colorScheme.onBackground) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.Transparent)
+                    .focusRequester(focusRequester)
             )
             OutlinedTextField(
                 value = todoDesc,
                 onValueChange = { todoDesc = it },
-                placeholder = { Text(text = "Todo Item Description") },
+//                placeholder = { Text(text = "Pick up groceries") },
                 maxLines = 1,
+                colors = TextFieldDefaults.colors(focusedIndicatorColor = MaterialTheme.colorScheme.secondary),
                 textStyle = TextStyle(
                     color = MaterialTheme.colorScheme.onBackground,
                     fontWeight = FontWeight.Normal,
@@ -235,24 +232,13 @@ class MainActivity : ComponentActivity() {
                 keyboardActions = KeyboardActions(
                     onDone = {
                         if (todoDesc.isNotEmpty()) {
-//                            val newTodo = Todo(
-//                                id = 0,
-//                                status = false,
-//                                todoItem = todoText,
-//                                description = todoDesc
-//                            )
-//                            todoViewModel.addTodo(newTodo)
-//                            todoText = ""
-//                            todoDesc = ""
-//                            keyboardController?.hide()
-//                            focusManager.clearFocus()
                             focusManager.moveFocus(FocusDirection.Down)
                         }
                     },
                 ),
                 label = {
                     Text(
-                        "Add a Description",
+                        "Description",
                         color = MaterialTheme.colorScheme.onBackground
                     )
                 },
@@ -305,6 +291,11 @@ class MainActivity : ComponentActivity() {
                     )
                 ) { Text(text = "Submit") }
             }
+        }
+
+        LaunchedEffect(Unit) {
+            focusRequester.requestFocus()
+            keyboardController?.show()
         }
     }
 
