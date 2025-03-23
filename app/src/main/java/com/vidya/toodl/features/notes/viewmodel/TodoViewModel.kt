@@ -1,10 +1,10 @@
-package com.example.firstapplication.viewmodel
+package com.vidya.toodl.features.notes.viewmodel
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.firstapplication.data.Todo
-import com.example.firstapplication.data.TodoDao
+import com.vidya.toodl.features.notes.data.Todo
+import com.vidya.toodl.features.notes.data.TodoDao
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch

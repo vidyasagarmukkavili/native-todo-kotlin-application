@@ -1,4 +1,4 @@
-package com.example.firstapplication.ui.theme
+package com.vidya.toodl.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
