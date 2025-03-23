@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -30,7 +29,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.Card
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.FloatingActionButtonDefaults
 import androidx.compose.material3.Icon
@@ -67,16 +65,15 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.vidya.toodl.data.AppDatabase
-import com.vidya.toodl.data.Todo
+import com.vidya.toodl.features.notes.data.AppDatabase
+import com.vidya.toodl.features.notes.data.Todo
+import com.vidya.toodl.features.notes.viewmodel.TodoViewModel
+import com.vidya.toodl.features.notes.viewmodel.TodoViewModelFactory
 import com.vidya.toodl.ui.theme.FirstApplicationTheme
-import com.vidya.toodl.viewmodel.TodoViewModel
-import com.vidya.toodl.viewmodel.TodoViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -127,7 +124,7 @@ class MainActivity : ComponentActivity() {
                         // Observe the ViewModel's state using collectAsState()
                         val todoList = todoViewModel.todos.collectAsState().value
 
-                        Box() {
+                        Box {
                             Column(
                                 verticalArrangement = Arrangement.Top,
                                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -319,7 +316,6 @@ class MainActivity : ComponentActivity() {
 
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun TodoItem(
         todo: Todo,
@@ -430,7 +426,6 @@ class MainActivity : ComponentActivity() {
     @Composable
     fun Header(
         heading: String,
-        modifier: Modifier = Modifier,
     ) {
         val standardPadding = 30.dp
 
@@ -463,26 +458,6 @@ class MainActivity : ComponentActivity() {
                     fontSize = 15.sp
                 )
 
-            }
-        }
-    }
-
-    @Preview(showBackground = true)
-    @Composable
-    fun GreetingPreview() {
-        FirstApplicationTheme {
-            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                Column(
-                    modifier =
-                    Modifier
-                        .fillMaxHeight()
-                        .background(Color(0xff1E201E)),
-                ) {
-                    Header(
-                        heading = "Todo Preview 📝",
-                        modifier = Modifier.padding(innerPadding),
-                    )
-                }
             }
         }
     }

@@ -1,4 +1,4 @@
-package com.vidya.toodl.data
+package com.vidya.toodl.features.notes.data
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

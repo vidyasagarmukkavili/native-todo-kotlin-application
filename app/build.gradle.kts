@@ -5,7 +5,7 @@ plugins {
     id("com.google.devtools.ksp")
     id("org.jlleitschuh.gradle.ktlint") version "11.0.0"
     id("kotlin-kapt")
-    id("com.google.dagger.hilt.android") version "2.51.1" apply false
+    id("com.google.dagger.hilt.android")
 }
 
 android {
