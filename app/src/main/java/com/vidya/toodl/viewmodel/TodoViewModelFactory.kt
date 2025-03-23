@@ -1,9 +1,9 @@
-package com.example.firstapplication.viewmodel
+package com.vidya.toodl.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.firstapplication.data.TodoDao
+import com.vidya.toodl.data.TodoDao
 
 /**
  * Provider Factory class which is going to create and instantiate

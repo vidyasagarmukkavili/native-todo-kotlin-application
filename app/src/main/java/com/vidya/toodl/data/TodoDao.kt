@@ -1,4 +1,4 @@
-package com.example.firstapplication.data
+package com.vidya.toodl.data
 
 import androidx.room.Dao
 import androidx.room.Delete

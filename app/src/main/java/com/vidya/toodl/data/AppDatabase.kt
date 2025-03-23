@@ -1,4 +1,4 @@
-package com.example.firstapplication.data
+package com.vidya.toodl.data
 
 import android.content.Context
 import androidx.room.Database

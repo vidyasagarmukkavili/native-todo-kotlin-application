@@ -1,4 +1,4 @@
-package com.example.firstapplication
+package com.vidya.toodl
 
 import android.os.Bundle
 import android.widget.Toast
@@ -72,15 +72,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.example.firstapplication.data.AppDatabase
-import com.example.firstapplication.data.Todo
-import com.example.firstapplication.ui.theme.FirstApplicationTheme
-import com.example.firstapplication.viewmodel.TodoViewModel
-import com.example.firstapplication.viewmodel.TodoViewModelFactory
+import com.vidya.toodl.data.AppDatabase
+import com.vidya.toodl.data.Todo
+import com.vidya.toodl.ui.theme.FirstApplicationTheme
+import com.vidya.toodl.viewmodel.TodoViewModel
+import com.vidya.toodl.viewmodel.TodoViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
