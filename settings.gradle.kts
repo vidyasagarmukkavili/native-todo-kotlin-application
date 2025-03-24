@@ -19,5 +19,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "First Application"
+rootProject.name = "Toodl"
 include(":app")

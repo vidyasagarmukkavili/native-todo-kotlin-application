@@ -257,7 +257,9 @@ class MainActivity : ComponentActivity() {
                         keyboardController?.hide()
                         focusManager.clearFocus()
                     },
-                    modifier = Modifier.padding(end = 10.dp),
+                    shape = RoundedCornerShape(percent = 25),
+                    modifier = Modifier
+                        .padding(end = 10.dp),
                     colors = ButtonColors(
                         containerColor = MaterialTheme.colorScheme.secondary,
                         contentColor = MaterialTheme.colorScheme.onSecondary,
@@ -282,6 +284,7 @@ class MainActivity : ComponentActivity() {
                             focusManager.clearFocus()
                         }
                     },
+                    shape = RoundedCornerShape(percent = 25),
                     colors = ButtonColors(
                         containerColor = MaterialTheme.colorScheme.primary,
                         contentColor = MaterialTheme.colorScheme.onPrimary,
