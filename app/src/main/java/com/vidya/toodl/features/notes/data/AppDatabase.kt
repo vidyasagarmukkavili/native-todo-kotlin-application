@@ -9,10 +9,10 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
     version = 2,
-    entities = [Todo::class]
+    entities = [Task::class]
 )
 abstract class AppDatabase : RoomDatabase() {
-    abstract fun todoDao(): TodoDao
+    abstract fun todoDao(): TaskDao
 
     companion object {
 

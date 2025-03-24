@@ -4,8 +4,8 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "todo_list_entity")
-data class Todo(
+@Entity(tableName = "task")
+data class Task(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
     @ColumnInfo(name = "status")
