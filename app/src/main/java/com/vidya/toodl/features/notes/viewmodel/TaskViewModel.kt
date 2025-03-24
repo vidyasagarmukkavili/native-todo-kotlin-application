@@ -3,16 +3,19 @@ package com.vidya.toodl.features.notes.viewmodel
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.vidya.toodl.features.notes.data.Todo
-import com.vidya.toodl.features.notes.data.TodoDao
+import com.vidya.toodl.features.notes.data.Task
+import com.vidya.toodl.features.notes.data.TaskDao
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TodoViewModel(private val todoDao: TodoDao) : ViewModel() {
+@HiltViewModel
+class TaskViewModel @Inject constructor (private val taskDao: TaskDao) : ViewModel() {
 
-    private val _todos = MutableStateFlow<List<Todo>>(emptyList())
-    val todos: StateFlow<List<Todo>> = _todos
+    private val _todos = MutableStateFlow<List<Task>>(emptyList())
+    val todos: StateFlow<List<Task>> = _todos
 
     //    var showTodoDialogBox by mutableStateOf(false)
     private val _showTodoDialogBox = mutableStateOf(false)
@@ -31,27 +34,27 @@ class TodoViewModel(private val todoDao: TodoDao) : ViewModel() {
 
     fun fetchAllToDoItems() {
         viewModelScope.launch {
-            todoDao.getAllToDoItems().collect { todoList ->
+            taskDao.getAllToDoItems().collect { todoList ->
                 _todos.value = todoList
             }
         }
     }
 
-    fun addTodo(todo: Todo) {
+    fun addTodo(task: Task) {
         viewModelScope.launch {
-            todoDao.insertToDo(todo)
+            taskDao.insertToDo(task)
         }
     }
 
-    fun updateTodoStatus(isChecked: Boolean, todo: Todo) {
+    fun updateTodoStatus(isChecked: Boolean, task: Task) {
         viewModelScope.launch {
-            todoDao.updateStatusById(status = isChecked, id = todo.id)
+            taskDao.updateStatusById(status = isChecked, id = task.id)
         }
     }
 
-    fun deleteToDo(todo: Todo) {
+    fun deleteToDo(task: Task) {
         viewModelScope.launch {
-            todoDao.deleteTodoItem(todo)
+            taskDao.deleteTodoItem(task)
         }
     }
 

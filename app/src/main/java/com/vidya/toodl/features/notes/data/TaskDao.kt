@@ -7,18 +7,18 @@ import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
 
 @Dao
-interface TodoDao {
+interface TaskDao {
 
     // Inserts an item into the database and replaces one already exists
     @Upsert
-    suspend fun insertToDo(toDoItem: Todo)
+    suspend fun insertToDo(toDoItem: Task)
 
     @Delete
-    suspend fun deleteTodoItem(toDoItem: Todo)
+    suspend fun deleteTodoItem(toDoItem: Task)
 
-    @Query("SELECT * FROM todo_list_entity ORDER BY id")
-    fun getAllToDoItems(): Flow<List<Todo>>
+    @Query("SELECT * FROM task ORDER BY id")
+    fun getAllToDoItems(): Flow<List<Task>>
 
-    @Query("UPDATE todo_list_entity SET status = :status WHERE id= :id")
+    @Query("UPDATE task SET status = :status WHERE id= :id")
     suspend fun updateStatusById(status: Boolean, id: Int)
 }

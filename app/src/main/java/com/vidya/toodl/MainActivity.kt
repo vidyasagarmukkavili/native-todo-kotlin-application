@@ -69,10 +69,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import com.vidya.toodl.features.notes.data.AppDatabase
-import com.vidya.toodl.features.notes.data.Todo
-import com.vidya.toodl.features.notes.viewmodel.TodoViewModel
-import com.vidya.toodl.features.notes.viewmodel.TodoViewModelFactory
+import com.vidya.toodl.features.notes.data.Task
+import com.vidya.toodl.features.notes.viewmodel.TaskViewModel
 import com.vidya.toodl.ui.theme.FirstApplicationTheme
 import dagger.hilt.android.AndroidEntryPoint
 import java.text.SimpleDateFormat
@@ -85,13 +83,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         installSplashScreen()
 
-        // Get the database instance
-        val db = AppDatabase.getDatabase(this)
-        val todoDao = db.todoDao()
-
-        val todoViewModel: TodoViewModel by viewModels {
-            TodoViewModelFactory(todoDao)
-        }
+        // Get taskViewModel instance through Dagger - Hilt
+        val taskViewModel: TaskViewModel by viewModels()
 
         enableEdgeToEdge()
         setContent {
@@ -111,7 +104,7 @@ class MainActivity : ComponentActivity() {
 
                             FloatingActionButton(
                                 onClick = {
-                                    todoViewModel.showTodoDialogBox = true
+                                    taskViewModel.showTodoDialogBox = true
                                 },
                                 containerColor = FloatingActionButtonDefaults.containerColor
 
@@ -122,7 +115,7 @@ class MainActivity : ComponentActivity() {
 
                     ) { contentPadding ->
                         // Observe the ViewModel's state using collectAsState()
-                        val todoList = todoViewModel.todos.collectAsState().value
+                        val todoList = taskViewModel.todos.collectAsState().value
 
                         Box {
                             Column(
@@ -131,12 +124,12 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.padding(top = contentPadding.calculateTopPadding())
                             ) {
                                 TodoList(
-                                    todoList = todoList,
-                                    todoViewModel
+                                    taskList = todoList,
+                                    taskViewModel
                                 )
                             }
-                            if (todoViewModel.showTodoDialogBox) {
-                                AddTodoItemDialogBox(todoViewModel)
+                            if (taskViewModel.showTodoDialogBox) {
+                                AddTodoItemDialogBox(taskViewModel)
                             }
                         }
                     }
@@ -147,7 +140,7 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun AddTodoItemDialogBox(
-        todoViewModel: TodoViewModel
+        taskViewModel: TaskViewModel
     ) {
         val openDialog = remember { mutableStateOf(true) }
 
@@ -168,14 +161,14 @@ class MainActivity : ComponentActivity() {
                             .background(Color.Transparent),
                         textAlign = TextAlign.Center
                     )
-                    AddTodoItemTextField(todoViewModel)
+                    AddTodoItemTextField(taskViewModel)
                 }
             }
         }
     }
 
     @Composable
-    fun AddTodoItemTextField(todoViewModel: TodoViewModel) {
+    fun AddTodoItemTextField(taskViewModel: TaskViewModel) {
         var todoText by remember { mutableStateOf("") }
         var todoDesc by remember { mutableStateOf("") }
         val focusRequester = remember { FocusRequester() }
@@ -251,7 +244,7 @@ class MainActivity : ComponentActivity() {
             ) {
                 Button(
                     onClick = {
-                        todoViewModel.showTodoDialogBox = false
+                        taskViewModel.showTodoDialogBox = false
                         todoDesc = ""
                         todoText = ""
                         keyboardController?.hide()
@@ -270,14 +263,14 @@ class MainActivity : ComponentActivity() {
                 Button(
                     onClick = {
                         if (todoDesc.isNotEmpty() && todoText.isNotEmpty()) {
-                            val newTodo = Todo(
+                            val newTask = Task(
                                 id = 0,
                                 status = false,
                                 todoItem = todoText,
                                 description = todoDesc
                             )
-                            todoViewModel.showTodoDialogBox = false
-                            todoViewModel.addTodo(newTodo)
+                            taskViewModel.showTodoDialogBox = false
+                            taskViewModel.addTodo(newTask)
                             todoDesc = ""
                             todoText = ""
                             keyboardController?.hide()
@@ -303,7 +296,7 @@ class MainActivity : ComponentActivity() {
 
 
     @Composable
-    fun TodoList(todoList: List<Todo>, todoViewModel: TodoViewModel) {
+    fun TodoList(taskList: List<Task>, taskViewModel: TaskViewModel) {
 
         LazyColumn(
             modifier = Modifier
@@ -312,8 +305,8 @@ class MainActivity : ComponentActivity() {
                 .animateContentSize()
 
         ) {
-            items(todoList, key = { it.id }) { todo ->
-                TodoItem(todo = todo, todoViewModel)
+            items(taskList, key = { it.id }) { todo ->
+                TodoItem(task = todo, taskViewModel)
             }
         }
 
@@ -321,16 +314,16 @@ class MainActivity : ComponentActivity() {
 
     @Composable
     fun TodoItem(
-        todo: Todo,
-        todoViewModel: TodoViewModel
+        task: Task,
+        taskViewModel: TaskViewModel
     ) {
         val standardPadding = 30.dp
 
         var todoStatus by remember { mutableStateOf(false) }
 
-        if (todo.status.equals(false)) {
+        if (task.status.equals(false)) {
             todoStatus = false
-        } else if (todo.status.equals(true)) {
+        } else if (task.status.equals(true)) {
             todoStatus = true
         }
 
@@ -348,7 +341,7 @@ class MainActivity : ComponentActivity() {
                     when (targetState) {
                         SwipeToDismissBoxValue.StartToEnd -> {
                             haptic.performHapticFeedback(hapticFeedbackType = HapticFeedbackType.LongPress)
-                            todoViewModel.deleteToDo(todo)
+                            taskViewModel.deleteToDo(task)
                             Toast.makeText(
                                 context,
                                 "Todo Deleted! \uD83D\uDDD1\uFE0F",
@@ -380,11 +373,11 @@ class MainActivity : ComponentActivity() {
                         Checkbox(
                             checked = todoStatus,
                             onCheckedChange = {
-                                todoViewModel.updateTodoStatus(it, todo)
+                                taskViewModel.updateTodoStatus(it, task)
                             }
                         )
                         Text(
-                            text = todo.todoItem,
+                            text = task.todoItem,
                             color = MaterialTheme.colorScheme.primary,
                             fontSize = 20.sp,
                             textDecoration = if (todoStatus) TextDecoration.LineThrough else TextDecoration.None
