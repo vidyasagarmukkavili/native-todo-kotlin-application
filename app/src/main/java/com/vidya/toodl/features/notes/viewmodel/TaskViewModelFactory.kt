@@ -9,11 +9,11 @@ import com.vidya.toodl.features.notes.data.TodoDao
  * Provider Factory class which is going to create and instantiate
  * the ViewModel Object for usage in Activity
  */
-class TodoViewModelFactory(private val todoDao: TodoDao) : ViewModelProvider.Factory {
+class TaskViewModelFactory(private val todoDao: TodoDao) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
         @Suppress("UNCHECKED_CAST")
-        return TodoViewModel(todoDao) as T
+        return TaskViewModel(todoDao) as T
     }
 
 }

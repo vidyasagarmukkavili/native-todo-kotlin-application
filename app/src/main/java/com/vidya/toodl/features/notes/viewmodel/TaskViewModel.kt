@@ -5,11 +5,14 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vidya.toodl.features.notes.data.Todo
 import com.vidya.toodl.features.notes.data.TodoDao
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class TodoViewModel(private val todoDao: TodoDao) : ViewModel() {
+
+class TaskViewModel (private val todoDao: TodoDao) : ViewModel() {
 
     private val _todos = MutableStateFlow<List<Todo>>(emptyList())
     val todos: StateFlow<List<Todo>> = _todos
