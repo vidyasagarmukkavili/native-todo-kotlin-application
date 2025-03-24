@@ -81,9 +81,11 @@ import java.util.Locale
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        // Show Splash Screen
         installSplashScreen()
 
-        // Get taskViewModel instance through Dagger - Hilt
+        // Get taskViewModel instance through Dagger - Hilt and Kotlin delegation
         val taskViewModel: TaskViewModel by viewModels()
 
         enableEdgeToEdge()
