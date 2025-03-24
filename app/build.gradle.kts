@@ -9,11 +9,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.firstapplication"
+    namespace = "com.vidya.toodl"
     compileSdk = 35
 
     defaultConfig {
-        applicationId = "com.example.firstapplication"
+        applicationId = "com.vidya.toodl"
         minSdk = 24
         targetSdk = 35
         versionCode = 1
